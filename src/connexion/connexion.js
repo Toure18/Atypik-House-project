@@ -70,8 +70,8 @@ function Connexion() {
           </Button>
         </Box>
       </Box>
-      <Typography variant="body2" sx={{ mt: 4, mb: 5, color: theme.palette.primary.main }}>
-        Pas de compte ? <Link href="#" underline="none" sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>Inscrivez vous</Link>
+      <Typography variant="body2" sx={{ mt: 4, color: theme.palette.primary.main }}>
+        Pas de compte ? <Link href="/inscription" underline="none" sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>Inscrivez vous</Link>
       </Typography>
     </Container>
   );
