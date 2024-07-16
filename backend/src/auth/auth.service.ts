@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../users/users.service';
 import { ConflictException, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -45,15 +46,18 @@ export class AuthService {
     });
   }
 
-  public async register(user: User): Promise<any> {
-
-    // Check if email is already taken
-    const existingUser = await this.usersService.getUserByEmail(user.email);
+  public async register(createUserDto: CreateUserDto): Promise<any> {
+    const existingUser = await this.usersService.getUserByEmail(createUserDto.email);
     if (existingUser) {
       throw new ConflictException('Email address already taken');
     }
 
-    user.password = this.hash(user.password);
+    const user = new User();
+    user.email = createUserDto.email;
+    user.password = this.hash(createUserDto.password);
+    user.firstname = createUserDto.firstname;
+    user.lastname = createUserDto.lastname;
+    user.accountType = createUserDto.accountType;
 
     return this.usersService.saveUser(user);
   }
@@ -64,4 +68,6 @@ export class AuthService {
   private hash(password): string{
    return crypto.createHmac('sha256', password).digest('hex');
   }
+
+  
 }

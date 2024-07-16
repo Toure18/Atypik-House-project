@@ -23,20 +23,45 @@ function Inscription() {
   const handleAccountTypeChange = (event) => {
     setAccountType(event.target.value);
   };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!firstname) newErrors.firstname = 'Le prénom est requis.';
+    if (!lastname) newErrors.lastname = 'Le nom est requis.';
+    if (!email) newErrors.email = 'L\'adresse email est requise.';
+    if (!password) newErrors.password = 'Le mot de passe est requis.';
+    else if (password.length < 6) newErrors.password = 'Le mot de passe doit contenir au moins 6 caractères.';
+    if (!accountType) newErrors.accountType = 'Le type de compte est requis.';
+    return newErrors;
+  };
   
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState('');
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
     try {
       await AuthService.register(firstname, lastname, email, password, accountType);
       navigate('/connexion');
     } catch (error) {
-      console.log(error)
+      if (error.response && error.response.status === 409) {
+        setErrors({ email: 'L\'adresse email est déjà utilisée.' });
+      } else if (error.response && error.response.status === 400){
+        setErrors({ email: 'L\'adresse email est invalide' });
+      }
+      else {
+        setErrors({ general: 'Une erreur est survenue. Veuillez réessayer.' });
+      }
     }
   };
 
@@ -71,6 +96,8 @@ function Inscription() {
             variant="outlined"
             value={firstname}
             onChange={(e) => setFirstname(e.target.value)}
+            error={!!errors.firstname}
+            helperText={errors.firstname}
           />
           <TextField
             margin="normal"
@@ -84,6 +111,8 @@ function Inscription() {
             variant="outlined"
             value={lastname}
             onChange={(e) => setLastname(e.target.value)}
+            error={!!errors.lastname}
+            helperText={errors.lastname}
           />
           <TextField
             margin="normal"
@@ -96,6 +125,8 @@ function Inscription() {
             variant="outlined"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             margin="normal"
@@ -109,6 +140,8 @@ function Inscription() {
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            helperText={errors.password}
           />
           <FormControl fullWidth variant="outlined" margin="normal">
             <InputLabel id="account-type-label">Type de compte</InputLabel>
@@ -122,6 +155,7 @@ function Inscription() {
               <MenuItem value="locataire">Locataire</MenuItem>
               <MenuItem value="propriétaire">Propriétaire</MenuItem>
             </Select>
+            {errors.accountType && <Typography variant="body2" color="error">{errors.accountType}</Typography>}
           </FormControl>
           <Button
             type="submit"
@@ -139,8 +173,10 @@ function Inscription() {
           >
             Inscription
           </Button>
+          {errors.general && <Typography variant="body2" color="error" sx={{ mt: 2 }}>{errors.general}</Typography>}
         </Box>
       </Box>
+
       <Typography variant="body2" sx={{ mt: 4, color: theme.palette.primary.main }}>
         Déjà un compte ? <Link href="/connexion" underline="none" sx={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>Connectez-vous</Link>
       </Typography>

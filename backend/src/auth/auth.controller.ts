@@ -1,9 +1,10 @@
 //src/auth/auth.controller.ts
 
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/users/user.entity/user.entity';
 import { Public } from './decorators/public.decorator';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 @Public()
 @Controller('auth')
 export class AuthController {
@@ -11,6 +12,7 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @UsePipes(new ValidationPipe())
   async login(@Body() user: User): Promise<any> {
     return this.authService.login(user);
   }
@@ -18,7 +20,8 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  async register(@Body() user: User): Promise<any> {
-    return this.authService.register(user);
+  @UsePipes(new ValidationPipe())
+  async register(@Body() createUserDto: CreateUserDto): Promise<any> {
+    return this.authService.register(createUserDto);
   }
 }

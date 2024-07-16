@@ -14,19 +14,41 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Connexion() {
+  
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!email) newErrors.email = 'L\'adresse email est requise.';
+    if (!password) newErrors.password = 'Le mot de passe est requis.';
+    return newErrors;
+  };
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    
     try {
       await AuthService.login(email, password);
       navigate('/');
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.data) {
+        setErrors({ general: "L'e-mail ou le mot de passe fourni est incorrect" });
+      } else {
+        setErrors({ general: "Une erreur s'est produite lors de la connexion." });
+      }
     }
   };
 
@@ -61,6 +83,8 @@ function Connexion() {
             variant="outlined"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={!!errors.email}
+            helperText={errors.email}
           />
           <TextField
             margin="normal"
@@ -74,6 +98,8 @@ function Connexion() {
             variant="outlined"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            helperText={errors.password}
           />
           <Button
             type="submit"
@@ -91,6 +117,7 @@ function Connexion() {
           >
             Connexion
           </Button>
+          {errors.general && <Typography variant="body2" color="error" sx={{ mt: 2 }}>{errors.general}</Typography>}
         </Box>
       </Box>
       <Typography variant="body2" sx={{ mt: 4, color: theme.palette.primary.main }}>
