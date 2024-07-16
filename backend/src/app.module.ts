@@ -7,6 +7,12 @@ import { AppService } from './app.service';
 import { databaseConfig } from './config/database.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { PropertiesModule } from './properties/properties.module';
+import { CommentModule } from './comment/comment.module';
+import { EquipmentModule } from './equipment/equipment.module';
+import { AdminModule } from './admin/admin.module';
+import { BookingModule } from './booking/booking.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -16,6 +22,12 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    PropertiesModule,
+    CommentModule,
+    EquipmentModule,
+    AdminModule,
+    BookingModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
