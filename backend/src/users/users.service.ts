@@ -28,7 +28,7 @@ export class UsersService {
   }
 
   deleteUser(user: User): void {
-    this.usersRepository.delete(user);
+    //this.usersRepository.delete(user);
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {

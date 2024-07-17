@@ -3,7 +3,7 @@
 import { User } from './../users/user.entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../users/users.service';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
@@ -31,7 +31,7 @@ export class AuthService {
     return this.validate(user.email).then(userData => {
       // user not found
       if (!userData || userData.password != this.hash(user.password)) {
-        return { status: 404 };
+        throw new HttpException("L'e-mail ou le mot de passe fourni est incorrect", 404);
       }
 
       // user found
