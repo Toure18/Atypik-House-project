@@ -3,9 +3,10 @@
 import { User } from './../users/user.entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../users/users.service';
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
   public async login(user: User): Promise<any | { status: number}> {
     return this.validate(user.email).then(userData => {
       if (!userData || userData.password != this.hash(user.password)) {
-        return { status: 404 };
+        throw new HttpException("L'e-mail ou le mot de passe fourni est incorrect", 404);
       }
      
       const payload = `${userData.id}`;

@@ -67,4 +67,5 @@ export class BookingService {
   remove(id: number) {
     return this.bookingRepository.delete(id);
   }
+
 }

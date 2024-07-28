@@ -12,5 +12,3 @@ import { Property } from '../properties/entities/property.entity';
   exports: [EquipmentService, TypeOrmModule.forFeature([Equipment])]
 })
 export class EquipmentModule {}
-
-

@@ -16,4 +16,3 @@ import { User } from '../users/user.entity/user.entity';
   exports: [PropertiesService, TypeOrmModule.forFeature([Property])]
 })
 export class PropertiesModule {}
-

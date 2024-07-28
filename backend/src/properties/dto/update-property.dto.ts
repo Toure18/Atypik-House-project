@@ -32,3 +32,4 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
   @Transform(({ value }) => new Date(value)) 
   availability_end: Date;
 }
+

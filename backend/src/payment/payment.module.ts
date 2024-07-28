@@ -16,5 +16,3 @@ import { BookingModule } from 'src/booking/booking.module';
   exports: [PaymentService, TypeOrmModule.forFeature([Payment])]
 })
 export class PaymentModule {}
-
-

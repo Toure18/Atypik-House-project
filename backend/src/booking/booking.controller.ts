@@ -1,3 +1,4 @@
+
 import { Controller, Get, Post, Body, Patch, Param, Delete, Request, Query } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
@@ -21,6 +22,7 @@ export class BookingController {
     const propertyId = id_property;
     return this.bookingService.create(booking, userId, propertyId);
   }
+
 
   @Get()
   @ApiOperation({ summary: 'Get all bookings' })
