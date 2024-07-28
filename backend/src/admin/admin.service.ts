@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Admin } from './entities/admin.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AdminService {
-  create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
+  constructor(
+    @InjectRepository(Admin) private adminRepository: Repository<Admin>,
+  ){}
+  create(admin : Admin) : Promise<Admin> {
+    return this.adminRepository.save(admin);
   }
 
   findAll() {
@@ -23,4 +29,6 @@ export class AdminService {
   remove(id: number) {
     return `This action removes a #${id} admin`;
   }
+
+  
 }

@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../users/users.service';
 import { ConflictException, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -29,18 +29,15 @@ export class AuthService {
    */
   public async login(user: User): Promise<any | { status: number}> {
     return this.validate(user.email).then(userData => {
-      // user not found
       if (!userData || userData.password != this.hash(user.password)) {
         return { status: 404 };
       }
-
-      // user found
-      // The access token will be composed by the email
-      const payload = `${userData.email}`;
+     
+      const payload = `${userData.id}`;
       const accessToken = this.jwtService.sign(payload);
 
       return {
-        expires_in: 3600, // 1hour
+        expires_in: 3600,
         access_token: accessToken,
       }
     });
