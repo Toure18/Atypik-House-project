@@ -1,0 +1,1505 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+  "/users/{id}": {
+  "get": {
+  "operationId": "UsersController_get",
+  "summary": "Get user by id",
+  "parameters": [],
+  "responses": {},
+  "tags": [],
+  "security": []
+  },
+  "delete": {}
+  },
+  "/users": {},
+  "/auth/login": {
+  "post": {
+  "operationId": "AuthController_login",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/User"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": ""
+  }
+  }
+  }
+  },
+  "/auth/register": {
+  "post": {
+  "operationId": "AuthController_register",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/CreateUserDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": ""
+  }
+  }
+  }
+  },
+  "/properties/new": {
+  "post": {
+  "operationId": "PropertiesController_create",
+  "summary": "Create a new property",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Property"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": "The property has been successfully created.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Property"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "403": {
+  "description": "Forbidden."
+  }
+  }
+  }
+  },
+  "/properties/all": {
+  "get": {
+  "operationId": "PropertiesController_findAll",
+  "summary": "Get all properties",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": "Return all properties.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Property"
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  },
+  "/properties/my-properties": {
+  "get": {
+  "operationId": "PropertiesController_findAllByUser",
+  "summary": "Get all properties of the user",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": "Return all properties of the user.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Property"
+  }
+  }
+  }
+  }
+  }
+  }
+  }
+  },
+  "/properties/{id}": {
+  "get": {
+  "operationId": "PropertiesController_findOne",
+  "summary": "Get property by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "Return the property by id.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Property"
+  }
+  }
+  }
+  },
+  "404": {
+  "description": "Property not found."
+  }
+  }
+  },
+  "patch": {
+  "operationId": "PropertiesController_update",
+  "summary": "Update property by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/UpdatePropertyDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "200": {
+  "description": "The property has been successfully updated.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Property"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "404": {
+  "description": "Property not found."
+  }
+  }
+  },
+  "delete": {
+  "operationId": "PropertiesController_remove",
+  "summary": "Delete property by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "The property has been successfully deleted."
+  },
+  "404": {
+  "description": "Property not found."
+  }
+  }
+  }
+  },
+  "/comment": {
+  "post": {
+  "operationId": "CommentController_create",
+  "summary": "Create a new comment",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": "The comment has been successfully created.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "403": {
+  "description": "Forbidden."
+  }
+  },
+  "tags": [
+  "comment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "get": {
+  "operationId": "CommentController_findAll",
+  "summary": "Get all comments",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": "Return all comments.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  }
+  }
+  }
+  }
+  },
+  "tags": [
+  "comment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/comment/{id}": {
+  "get": {
+  "operationId": "CommentController_findOne",
+  "summary": "Get comment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "Return the comment by id.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  }
+  }
+  },
+  "404": {
+  "description": "Comment not found."
+  }
+  },
+  "tags": [
+  "comment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "patch": {
+  "operationId": "CommentController_update",
+  "summary": "Update comment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/UpdateCommentDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "200": {
+  "description": "The comment has been successfully updated.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "404": {
+  "description": "Comment not found."
+  }
+  },
+  "tags": [
+  "comment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "delete": {
+  "operationId": "CommentController_remove",
+  "summary": "Delete comment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "The comment has been successfully deleted."
+  },
+  "404": {
+  "description": "Comment not found."
+  }
+  },
+  "tags": [
+  "comment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/equipment": {
+  "post": {
+  "operationId": "EquipmentController_create",
+  "summary": "Create a new equipment",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/CreateEquipmentDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": "The equipment has been successfully created.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Equipment"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "403": {
+  "description": "Forbidden."
+  }
+  },
+  "tags": [
+  "equipment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "get": {
+  "operationId": "EquipmentController_findAll",
+  "summary": "Get all equipment",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": "Return all equipment.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Equipment"
+  }
+  }
+  }
+  }
+  }
+  },
+  "tags": [
+  "equipment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/equipment/{id}": {
+  "get": {
+  "operationId": "EquipmentController_findOne",
+  "summary": "Get equipment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "Return the equipment by id.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Equipment"
+  }
+  }
+  }
+  },
+  "404": {
+  "description": "Equipment not found."
+  }
+  },
+  "tags": [
+  "equipment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "patch": {
+  "operationId": "EquipmentController_update",
+  "summary": "Update equipment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/UpdateEquipmentDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "200": {
+  "description": "The equipment has been successfully updated.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Equipment"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "404": {
+  "description": "Equipment not found."
+  }
+  },
+  "tags": [
+  "equipment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "delete": {
+  "operationId": "EquipmentController_remove",
+  "summary": "Delete equipment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "The equipment has been successfully deleted."
+  },
+  "404": {
+  "description": "Equipment not found."
+  }
+  },
+  "tags": [
+  "equipment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/admin": {
+  "post": {
+  "operationId": "AdminController_create",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Admin"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": ""
+  }
+  }
+  },
+  "get": {
+  "operationId": "AdminController_findAll",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": ""
+  }
+  }
+  }
+  },
+  "/admin/{id}": {
+  "get": {
+  "operationId": "AdminController_findOne",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": ""
+  }
+  }
+  },
+  "patch": {
+  "operationId": "AdminController_update",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/UpdateAdminDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "200": {
+  "description": ""
+  }
+  }
+  },
+  "delete": {
+  "operationId": "AdminController_remove",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": ""
+  }
+  }
+  }
+  },
+  "/booking": {
+  "post": {
+  "operationId": "BookingController_create",
+  "summary": "Create a new booking",
+  "parameters": [
+  {
+  "name": "id_property",
+  "required": true,
+  "in": "query",
+  "schema": {
+  "type": "number"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": "The booking has been successfully created.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "403": {
+  "description": "Forbidden."
+  }
+  },
+  "tags": [
+  "booking"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "get": {
+  "operationId": "BookingController_findAll",
+  "summary": "Get all bookings",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": "Return all bookings.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  }
+  }
+  }
+  }
+  },
+  "tags": [
+  "booking"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/booking/{id}": {
+  "get": {
+  "operationId": "BookingController_findOne",
+  "summary": "Get booking by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "Return the booking by id.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  }
+  }
+  },
+  "404": {
+  "description": "Booking not found."
+  }
+  },
+  "tags": [
+  "booking"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "patch": {
+  "operationId": "BookingController_update",
+  "summary": "Update booking by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/UpdateBookingDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "200": {
+  "description": "The booking has been successfully updated.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "404": {
+  "description": "Booking not found."
+  }
+  },
+  "tags": [
+  "booking"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "delete": {
+  "operationId": "BookingController_remove",
+  "summary": "Delete booking by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "The booking has been successfully deleted."
+  },
+  "404": {
+  "description": "Booking not found."
+  }
+  },
+  "tags": [
+  "booking"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/payment": {
+  "post": {
+  "operationId": "PaymentController_create",
+  "summary": "Create a new payment",
+  "parameters": [],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/CreatePaymentDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "201": {
+  "description": "The payment has been successfully created.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Payment"
+  }
+  }
+  }
+  },
+  "400": {
+  "description": "Invalid input, object invalid."
+  },
+  "403": {
+  "description": "Forbidden."
+  }
+  },
+  "tags": [
+  "payment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "get": {
+  "operationId": "PaymentController_findAll",
+  "summary": "Get all payments",
+  "parameters": [],
+  "responses": {
+  "200": {
+  "description": "Return all payments.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Payment"
+  }
+  }
+  }
+  }
+  }
+  },
+  "tags": [
+  "payment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  },
+  "/payment/{id}": {
+  "get": {
+  "operationId": "PaymentController_findOne",
+  "summary": "Get payment by id",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": "Return the payment by id.",
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/Payment"
+  }
+  }
+  }
+  },
+  "404": {
+  "description": "Payment not found."
+  }
+  },
+  "tags": [
+  "payment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "patch": {
+  "operationId": "PaymentController_update",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "requestBody": {
+  "required": true,
+  "content": {
+  "application/json": {
+  "schema": {
+  "$ref": "#/components/schemas/UpdatePaymentDto"
+  }
+  }
+  }
+  },
+  "responses": {
+  "200": {
+  "description": ""
+  }
+  },
+  "tags": [
+  "payment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  },
+  "delete": {
+  "operationId": "PaymentController_remove",
+  "parameters": [
+  {
+  "name": "id",
+  "required": true,
+  "in": "path",
+  "schema": {
+  "type": "string"
+  }
+  }
+  ],
+  "responses": {
+  "200": {
+  "description": ""
+  }
+  },
+  "tags": [
+  "payment"
+  ],
+  "security": [
+  {
+  "bearer": []
+  }
+  ]
+  }
+  }
+  },
+  "info": {
+  "title": "AtypicHouse Api",
+  "description": "The AtypicHouse API description",
+  "version": "1.0",
+  "contact": {}
+  },
+  "tags": [
+  {
+  "name": "AtypicHouse",
+  "description": ""
+  }
+  ],
+  "servers": [],
+  "components": {
+  "schemas": {
+  "Payment": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the payment"
+  },
+  "price": {
+  "type": "number",
+  "example": 100,
+  "description": "The price of the payment"
+  },
+  "status": {
+  "type": "string",
+  "example": "completed",
+  "description": "The status of the payment"
+  },
+  "booking": {
+  "description": "The booking to which the payment belongs",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/Booking"
+  }
+  ]
+  }
+  },
+  "required": [
+  "id",
+  "price",
+  "status",
+  "booking"
+  ]
+  },
+  "Booking": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the booking"
+  },
+  "beginDate": {
+  "format": "date-time",
+  "type": "string",
+  "example": "2024-07-17",
+  "description": "The start date of the booking"
+  },
+  "endDate": {
+  "format": "date-time",
+  "type": "string",
+  "example": "2024-07-20",
+  "description": "The end date of the booking"
+  },
+  "user": {
+  "description": "The user who made the booking",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/User"
+  }
+  ]
+  },
+  "property": {
+  "description": "The property being booked",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/Property"
+  }
+  ]
+  },
+  "payments": {
+  "description": "The payments associated with the booking",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Payment"
+  }
+  }
+  },
+  "required": [
+  "id",
+  "beginDate",
+  "endDate",
+  "user",
+  "property",
+  "payments"
+  ]
+  },
+  "Comment": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the comment"
+  },
+  "text": {
+  "type": "string",
+  "example": "This is a comment text.",
+  "description": "The content of the comment"
+  },
+  "date": {
+  "format": "date-time",
+  "type": "string",
+  "example": "2024-07-17",
+  "description": "The date when the comment was made"
+  },
+  "user": {
+  "description": "The user who made the comment",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/User"
+  }
+  ]
+  },
+  "property": {
+  "description": "The property the comment is about",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/Property"
+  }
+  ]
+  }
+  },
+  "required": [
+  "id",
+  "text",
+  "date",
+  "user",
+  "property"
+  ]
+  },
+  "User": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the User"
+  },
+  "email": {
+  "type": "string",
+  "example": "email@exemple.fr",
+  "description": "The email of the User"
+  },
+  "password": {
+  "type": "string",
+  "example": "hashedpassword",
+  "description": "The password of the User"
+  },
+  "firstname": {
+  "type": "string",
+  "example": "John",
+  "description": "The first name of the User"
+  },
+  "lastname": {
+  "type": "string",
+  "example": "Doe",
+  "description": "The last name of the User"
+  },
+  "accountType": {
+  "type": "string",
+  "example": "locataire",
+  "description": "The account type of the User"
+  },
+  "properties": {
+  "description": "The properties owned by the User",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Property"
+  }
+  },
+  "booking": {
+  "description": "The bookings made by the User",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  },
+  "comments": {
+  "description": "The comments made by the User",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  }
+  },
+  "required": [
+  "id",
+  "email",
+  "password",
+  "firstname",
+  "lastname",
+  "accountType",
+  "properties",
+  "booking",
+  "comments"
+  ]
+  },
+  "Equipment": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the equipment"
+  },
+  "listEquipment": {
+  "example": [
+  "WiFi",
+  "Air Conditioning",
+  "Heating"
+  ],
+  "description": "A list of equipment available at the property",
+  "type": "array",
+  "items": {
+  "type": "string"
+  }
+  },
+  "property": {
+  "description": "The property to which the equipment belongs",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/Property"
+  }
+  ]
+  }
+  },
+  "required": [
+  "id",
+  "listEquipment",
+  "property"
+  ]
+  },
+  "Property": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the property"
+  },
+  "name": {
+  "type": "string",
+  "example": "Cozy Apartment",
+  "description": "The name of the property"
+  },
+  "type": {
+  "type": "string",
+  "example": "Apartment",
+  "description": "The type of the property"
+  },
+  "piecesNb": {
+  "type": "number",
+  "example": 3,
+  "description": "The number of pieces in the property"
+  },
+  "capacity": {
+  "type": "number",
+  "example": 4,
+  "description": "The capacity of the property"
+  },
+  "price": {
+  "type": "number",
+  "example": 150,
+  "description": "The price of the property"
+  },
+  "pictures": {
+  "example": [
+  "image1.jpg",
+  "image2.jpg"
+  ],
+  "description": "The list of pictures of the property",
+  "type": "array",
+  "items": {
+  "type": "string"
+  }
+  },
+  "availability_begin": {
+  "format": "date-time",
+  "type": "string",
+  "example": "2024-07-01",
+  "description": "The beginning date of availability for the property"
+  },
+  "availability_end": {
+  "format": "date-time",
+  "type": "string",
+  "example": "2024-07-31",
+  "description": "The end date of availability for the property"
+  },
+  "user": {
+  "description": "The user who owns the property",
+  "allOf": [
+  {
+  "$ref": "#/components/schemas/User"
+  }
+  ]
+  },
+  "comments": {
+  "description": "The list of comments for the property",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Comment"
+  }
+  },
+  "equipments": {
+  "description": "The list of equipments for the property",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Equipment"
+  }
+  },
+  "booking": {
+  "description": "The list of bookings for the property",
+  "type": "array",
+  "items": {
+  "$ref": "#/components/schemas/Booking"
+  }
+  }
+  },
+  "required": [
+  "id",
+  "name",
+  "type",
+  "piecesNb",
+  "capacity",
+  "price",
+  "pictures",
+  "availability_begin",
+  "availability_end",
+  "user",
+  "comments",
+  "equipments",
+  "booking"
+  ]
+  },
+  "CreateUserDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "UpdatePropertyDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "UpdateCommentDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "CreateEquipmentDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "UpdateEquipmentDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "Admin": {
+  "type": "object",
+  "properties": {
+  "id": {
+  "type": "number",
+  "example": 1,
+  "description": "The unique identifier of the User admin"
+  },
+  "email": {
+  "type": "string",
+  "example": "email@exemple.fr",
+  "description": "The email of the User admin"
+  },
+  "password": {
+  "type": "string",
+  "example": "email@exemple.fr",
+  "description": "The email of the User admin"
+  },
+  "firstname": {
+  "type": "string",
+  "example": "John",
+  "description": "The first name of the User admin"
+  },
+  "lastname": {
+  "type": "string",
+  "example": "Doe",
+  "description": "The last name of the User admin"
+  }
+  },
+  "required": [
+  "id",
+  "email",
+  "password",
+  "firstname",
+  "lastname"
+  ]
+  },
+  "UpdateAdminDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "UpdateBookingDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "CreatePaymentDto": {
+  "type": "object",
+  "properties": {}
+  },
+  "UpdatePaymentDto": {
+  "type": "object",
+  "properties": {}
+  }
+  }
+  }
+  }
