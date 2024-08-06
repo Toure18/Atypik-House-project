@@ -53,6 +53,7 @@ function Connexion() {
             variant="outlined"
           />
           <Button
+            href="/accueil"
             type="submit"
             variant="outlined"
             color="primary"
