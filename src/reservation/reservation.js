@@ -70,7 +70,7 @@ function ReservationPage() {
                         showDateDisplay={false} // Hides the date input boxes
                         staticRanges={[]} // Removes predefined ranges
                         inputRanges={[]} // Removes input range options
-                        style={{ width: '100%', marginBottom: '20px' }} // Ensure the picker takes the full container width
+                        style={{ width: '100%', marginBottom: '20px' }} 
                     />
                     <Button variant="contained" sx={{ width: '50%' }}>Réserver</Button>
                 </Grid>

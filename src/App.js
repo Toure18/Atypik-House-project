@@ -6,6 +6,7 @@ import Connexion from './connexion/connexion';
 import PageAccueil from './accueil/accueil';
 import Inscription from './inscription/inscription';
 import Reservation from './reservation/reservation';
+import Paiement from './paiement/paiement';
 import Footer from './includes/Footer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -22,6 +23,7 @@ function App() {
             <Route path="/inscription" element={<Inscription />} />
             <Route path="/accueil" element={<PageAccueil />} />
             <Route path="/reservation" element={<Reservation />} />
+            <Route path="/Paymentstatus" element={<Paiement />} />
           </Routes>
           <Footer />
         </div>
