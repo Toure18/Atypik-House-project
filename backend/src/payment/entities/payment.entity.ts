@@ -17,6 +17,10 @@ export class Payment {
   @Column({ length: 255 })
   status: string;
 
+  @ApiProperty({ example: 'cs_stripe_id10', description: 'The stripe transaction session id' })
+  @Column({ nullable: true }) 
+  stripeSessionId: string;
+
   @ApiProperty({ type: () => Booking, description: 'The booking to which the payment belongs' })
   @ManyToOne(() => Booking, (booking) => booking.payments)
   booking: Booking;

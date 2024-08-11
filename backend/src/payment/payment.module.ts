@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Payment } from './entities/payment.entity';
 import { Booking } from '../booking/entities/booking.entity';
 import { BookingModule } from 'src/booking/booking.module';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [

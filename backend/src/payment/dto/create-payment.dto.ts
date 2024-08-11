@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 import { Column } from "typeorm";
 
 export class CreatePaymentDto {
@@ -9,6 +9,9 @@ export class CreatePaymentDto {
 
   @Column({ length: 255 })
   status: string;
+
+  @IsOptional()
+  stripeSessionId: string;
 
   @IsNotEmpty()
   @IsNumber()
