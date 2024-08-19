@@ -18,7 +18,7 @@ export class PaymentController {
   @ApiResponse({ status: 201, description: 'The payment has been successfully created.', type: Payment })
   @ApiResponse({ status: 400, description: 'Invalid input, object invalid.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async create(@Body() createPaymentDto: CreatePaymentDto, @Query('booking_id') bookingId) {
+  async create(@Body() createPaymentDto: CreatePaymentDto, bookingId: number) {
     const { payment, sessionUrl } = await this.paymentService.create(createPaymentDto, bookingId);
     return { payment, sessionUrl };
     

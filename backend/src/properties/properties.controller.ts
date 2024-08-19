@@ -3,6 +3,7 @@ import { PropertiesService } from './properties.service';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { Property } from './entities/property.entity';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('properties')
 export class PropertiesController {
@@ -23,6 +24,7 @@ export class PropertiesController {
   @Get('/all')
   @ApiOperation({ summary: 'Get all properties' })
   @ApiResponse({ status: 200, description: 'Return all properties.', type: [Property] })
+  @Public() 
   findAll() {
     return this.propertiesService.findAll();
   }
@@ -39,6 +41,7 @@ export class PropertiesController {
   @ApiOperation({ summary: 'Get property by id' })
   @ApiResponse({ status: 200, description: 'Return the property by id.', type: Property })
   @ApiResponse({ status: 404, description: 'Property not found.' })
+  @Public() 
   findOne(@Param('id') id: string) {
     return this.propertiesService.findOne(+id);
   }

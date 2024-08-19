@@ -13,10 +13,9 @@ function Footer() {
     <Box component="footer" sx={{ py: 3, px: 2, mt: 'auto', backgroundColor: theme.palette.primary.main, color: '#fff' }}>
       <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Button color="inherit" sx={{ color: '#B08C5B' }}>Menu 1</Button>
-          <Button color="inherit" sx={{ color: '#B08C5B' }}>Menu 2</Button>
-          <Button color="inherit" sx={{ color: '#B08C5B' }}>Menu 3</Button>
-          <Button color="inherit" sx={{ color: '#B08C5B' }}>Menu 4</Button>
+          <Button color="inherit" sx={{ color: '#B08C5B' }}>A propos</Button>
+          <Button color="inherit" sx={{ color: '#B08C5B' }}>Contact</Button>
+          <Button color="inherit" sx={{ color: '#B08C5B' }}>Conditions générales</Button>
         </Box>
         <Typography variant="body1" sx={{ textAlign: 'center' }}>
           &copy; 2024 Atypik House

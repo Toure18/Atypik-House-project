@@ -16,6 +16,10 @@ export class Property {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
+  @ApiProperty({ example: 'The beautiful home...', description: 'The description of the property' })
+  @Column({ type: 'text' }) 
+  description: string;
+
   @ApiProperty({ example: 'Apartment', description: 'The type of the property' })
   @Column({ type: 'varchar', length: 255 })
   type: string;

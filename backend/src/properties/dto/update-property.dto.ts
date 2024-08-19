@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreatePropertyDto } from './create-property.dto';
-import { IsArray, IsDate, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsArray, IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
@@ -31,5 +31,9 @@ export class UpdatePropertyDto extends PartialType(CreatePropertyDto) {
   @IsDate()
   @Transform(({ value }) => new Date(value)) 
   availability_end: Date;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 }
 

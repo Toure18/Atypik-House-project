@@ -27,6 +27,7 @@ export class PropertiesService {
     property.pictures = createPropertyDto.pictures;
     property.availability_begin = createPropertyDto.availability_begin;
     property.availability_end = createPropertyDto.availability_end;
+    property.description = createPropertyDto.description;
     property.user = user;
     
     return this.propertyRepository.save(property);
@@ -53,7 +54,7 @@ export class PropertiesService {
   async findOne(id: number) : Promise<any>  {
     const result = await this.propertyRepository.find({
       relations: ['user'],
-      select: ['name', 'availability_begin', 'availability_end', 'capacity', 'pictures', 'piecesNb', 'price', 'type', 'user'],
+      select: ['name', 'availability_begin', 'availability_end', 'capacity', 'pictures', 'piecesNb', 'price', 'type', 'user', 'description'],
       where: [{ id: id }],
     });
     return result;

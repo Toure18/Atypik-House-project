@@ -17,10 +17,11 @@ export class BookingController {
   @ApiResponse({ status: 201, description: 'The booking has been successfully created.', type: Booking })
   @ApiResponse({ status: 400, description: 'Invalid input, object invalid.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  create(@Body() booking: Booking, @Request() req, @Query('id_property') id_property: number) {
+  async create(@Body() booking: Booking, @Request() req, @Query('id_property') id_property: number) {
     const userId = req.user;
     const propertyId = id_property;
-    return this.bookingService.create(booking, userId, propertyId);
+    const { bookingSave, bookingId } =  await this.bookingService.create(booking, userId, propertyId)
+    return { bookingSave, bookingId };
   }
 
 

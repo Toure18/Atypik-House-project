@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AuthService from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,6 +20,13 @@ function Connexion() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const validateForm = () => {
     const newErrors = {};

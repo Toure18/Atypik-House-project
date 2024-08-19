@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AuthService from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,6 +41,13 @@ function Inscription() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();

@@ -16,7 +16,7 @@ export class BookingService {
   ){}
   async create(createBookingDto: Booking,  userId: number, propertyId: number) {
     const booking = new Booking();
-    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    const user = await this.usersRepository.findOne({  where: { id: userId }});
     if (!user) {
       throw new Error('User not found');
     }
@@ -31,8 +31,10 @@ export class BookingService {
     booking.user = user;
     booking.property = property;
 
-    this.bookingRepository.save(booking);
+    
+    const savedBooking =  await this.bookingRepository.save(booking);
 
+    return { bookingSave: savedBooking, bookingId: booking.id };
   }
 
   async findAll(): Promise<any> {

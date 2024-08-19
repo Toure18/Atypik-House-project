@@ -1,5 +1,5 @@
 import { Transform, Type } from "class-transformer";
-import { IsArray, IsDate, IsInt, IsNotEmpty, IsNumber, IsOptional} from "class-validator";
+import { IsArray, IsDate, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString} from "class-validator";
 
 export class CreatePropertyDto {
   @IsOptional()
@@ -39,7 +39,9 @@ export class CreatePropertyDto {
   @Type(() => Number)
   user: number;
 
-  
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 }
 
 

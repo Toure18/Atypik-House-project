@@ -40,8 +40,8 @@ export class PaymentService {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:5000/booking',
-      cancel_url: 'https://localhost:5000/cancel',
+      success_url: 'http://localhost:3000/PaymentSuccess',
+      cancel_url: 'http://localhost:3000/PaymentError',
     });
     
     payment.price = createPaymentDto.price;
