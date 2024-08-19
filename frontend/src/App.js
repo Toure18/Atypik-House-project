@@ -15,6 +15,9 @@ import Footer from './includes/Footer';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import './App.css';
+import BlogPage from './components/blog/blogPage';
+
+
 
 function App() {
   return (
@@ -31,6 +34,7 @@ function App() {
             <Route path="/reservations" element={<MyReservations />} />
             <Route path="/PaymentSuccess" element={<PaiementSuccess />} />
             <Route path="/collection" element={<CollectionPage />} />
+            <Route path="/blog" element={<BlogPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />

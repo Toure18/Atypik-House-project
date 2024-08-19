@@ -54,6 +54,10 @@ function Navbar() {
     handleClose();
     navigate('/collection');
   };
+  const handleBlog = () => {
+    handleClose();
+    navigate('/blog');
+  };
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', paddingLeft: 0 }}>
@@ -64,7 +68,7 @@ function Navbar() {
         <Box sx={{ flexGrow: 1 }} />
         <Button color="inherit" sx={{ color: theme.palette.primary.main }} onClick={handleAccueil}>Accueil</Button>
         <Button color="inherit" sx={{ color: theme.palette.primary.main }} onClick={handleProperties}>Propriétés</Button>
-        <Button color="inherit" sx={{ color: theme.palette.primary.main }}>Blog</Button>
+        <Button color="inherit" sx={{ color: theme.palette.primary.main }} onClick={handleBlog}>Blog</Button>
 
         {isAuthenticated ? (
           <Box>
