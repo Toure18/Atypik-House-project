@@ -1,0 +1,21 @@
+/* Reset default margins and padding */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+/* Ensure the container of the image stretches fully */
+.Container { /* Update this class name based on your actual usage */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Set the image to stretch fully */
+img {
+  width: 100%;
+  height: auto; /* Maintains the aspect ratio */
+  display: block; /* Removes bottom space/gap */
+}
