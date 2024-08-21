@@ -3,7 +3,7 @@ import { PropertiesService } from './properties.service';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { Property } from './entities/property.entity';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('properties')
 export class PropertiesController {

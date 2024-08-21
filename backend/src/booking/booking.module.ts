@@ -3,10 +3,10 @@ import { BookingService } from './booking.service';
 import { BookingController } from './booking.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Booking } from './entities/booking.entity';
-import { PropertiesModule } from 'src/properties/properties.module';
-import { UsersModule } from 'src/users/users.module';
-import { Property } from 'src/properties/entities/property.entity';
-import { User } from 'src/users/user.entity/user.entity';
+import { PropertiesModule } from '../properties/properties.module';
+import { UsersModule } from '../users/users.module';
+import { Property } from '../properties/entities/property.entity';
+import { User } from '../users/user.entity/user.entity';
 
 @Module({
   imports: [

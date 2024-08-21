@@ -3,7 +3,7 @@ import { UpdatePropertyDto } from './dto/update-property.dto';
 import { Property } from './entities/property.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from 'src/users/user.entity/user.entity';
+import { User } from '../users/user.entity/user.entity';
 
 @Injectable()
 export class PropertiesService {

@@ -4,7 +4,7 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entities/payment.entity';
 import { Repository } from 'typeorm';
-import { Booking } from 'src/booking/entities/booking.entity';
+import { Booking } from '../booking/entities/booking.entity';
 import Stripe from 'stripe';
 
 @Injectable()

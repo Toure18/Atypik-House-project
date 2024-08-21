@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateEquipmentDto } from './dto/create-equipment.dto';
 import { UpdateEquipmentDto } from './dto/update-equipment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Property } from 'src/properties/entities/property.entity';
+import { Property } from '../properties/entities/property.entity';
 import { Repository } from 'typeorm';
 import { Equipment } from './entities/equipment.entity';
 
