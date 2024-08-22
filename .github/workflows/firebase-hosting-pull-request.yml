@@ -17,5 +17,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ATYPICHOUSE_DFB81 }}
-          projectId: atypichouse-dfb81
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_F2I_DSP4_G3_MT_MZ_AI_F42D7 }}
+          projectId: f2i-dsp4-g3-mt-mz-ai-f42d7
