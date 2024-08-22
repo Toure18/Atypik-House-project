@@ -3,7 +3,7 @@
 import apiInstance from './apiInstance'; 
 
 
-const API_URL = 'http://localhost:5000/payment'; // URL de votre API
+const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/payment'; // URL de votre API
 
 class PaymentService {
   // Création d'un paiement

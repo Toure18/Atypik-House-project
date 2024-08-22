@@ -3,7 +3,7 @@
 import apiInstance from './apiInstance';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/properties';
+const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/properties';
 
 class PropertiesService {
   getAllProperties() {

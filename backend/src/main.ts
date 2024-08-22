@@ -23,15 +23,18 @@ async function bootstrap() {
 
   // Configuration de Swagger
   const config = new DocumentBuilder()
-    .setTitle('AtypicHouse Api')
+    .setTitle('AtypicHouse API')
     .setDescription('The AtypicHouse API description')
     .setVersion('1.0')
     .addTag('AtypicHouse')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+
+  // Configuration Swagger
   SwaggerModule.setup('swagger', app, document, {
-    jsonDocumentUrl: 'swagger/json',
+    customSiteTitle: 'AtypicHouse API Docs', // Titre personnalisé de l'onglet Swagger
+    customCss: '.swagger-ui .topbar { display: none }', // CSS personnalisé
   });
 
   // Initialise l'application NestJS
