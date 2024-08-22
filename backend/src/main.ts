@@ -31,21 +31,9 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+  
   SwaggerModule.setup('swagger', app, document, {
     jsonDocumentUrl: 'swagger/json',
-    customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.3/swagger-ui.css',
-    customJsStr: `
-      window.onload = function() {
-        const script1 = document.createElement('script');
-        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.3/swagger-ui-bundle.js';
-        document.head.appendChild(script1);
-
-        const script2 = document.createElement('script');
-        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.3/swagger-ui-standalone-preset.js';
-        document.head.appendChild(script2);
-      }
-    `,
-    customSiteTitle: 'AtypicHouse Doc Api',
   });
 
   // Initialise l'application NestJS
