@@ -7,7 +7,7 @@ import 'swiper/css/pagination';
 
 import { Navigation, Pagination } from 'swiper/modules';
 
-import intro from './images/Rectangle 3.jpg';
+import intro from './images/accueil.jpg';
 import galerie1 from './images/Rectangle 9.jpg';
 import galerie2 from './images/Rectangle 10.jpg';
 import galerie3 from './images/Rectangle 11.jpg';
