@@ -33,17 +33,16 @@ async function bootstrap() {
 
   // Configuration Swagger
   SwaggerModule.setup('swagger', app, document, {
-    customSiteTitle: 'AtypicHouse API Docs', // Titre personnalisé de l'onglet Swagger
-    customCss: '.swagger-ui .topbar { display: none }', // CSS personnalisé
+    customSiteTitle: 'AtypicHouse API Docs',
+    customCss: '.swagger-ui .topbar { display: none }',
   });
 
   // Initialise l'application NestJS
   await app.init();
 }
 
-// Fonction qui sera utilisée par Vercel pour gérer les requêtes
 export default async (req: express.Request, res: express.Response) => {
-  if (!req.body) {
+  if (!server) {
     await bootstrap();
   }
   server(req, res);
