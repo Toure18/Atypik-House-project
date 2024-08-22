@@ -3,7 +3,7 @@
 import apiInstance from './apiInstance'; 
 
 
-const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/booking';
+const API_URL = 'https://atypik-house-project-toure18s-projects.vercel.app/booking';
 
 class BookingService {
   getAllBookings() {
