@@ -13,7 +13,7 @@ async function bootstrap() {
 
   // Configuration CORS
   app.enableCors({
-    origin: 'http://localhost:3000/',
+    origin: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
