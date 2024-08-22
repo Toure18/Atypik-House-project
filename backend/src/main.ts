@@ -33,8 +33,11 @@ async function bootstrap() {
 
   // Configuration Swagger
   SwaggerModule.setup('swagger', app, document, {
-    customSiteTitle: 'AtypicHouse API Docs',
-    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "AtypicHouse API'Docs",
+    swaggerOptions: {
+      url: 'https://cdn.jsdelivr.net/npm/swagger-ui-dist/swagger-ui-bundle.js',
+      layout: "StandaloneLayout"
+    }
   });
 
   // Initialise l'application NestJS
