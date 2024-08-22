@@ -16,6 +16,7 @@ async function bootstrap() {
     origin: 'https://atypichouse-dfb81.web.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
+    allowedHeaders: 'Content-Type, Authorization',
   });
 
   // Configuration des pipes de validation
@@ -33,19 +34,17 @@ async function bootstrap() {
 
   // Configuration Swagger
   SwaggerModule.setup('swagger', app, document, {
-    customSiteTitle: "AtypicHouse API'Docs",
-    swaggerOptions: {
-      url: 'https://cdn.jsdelivr.net/npm/swagger-ui-dist/swagger-ui-bundle.js',
-      layout: "StandaloneLayout"
-    }
+    customSiteTitle: 'AtypicHouse API Docs', // Titre personnalisé de l'onglet Swagger
+    customCss: '.swagger-ui .topbar { display: none }', // CSS personnalisé
   });
 
   // Initialise l'application NestJS
   await app.init();
 }
 
+// Fonction qui sera utilisée par Vercel pour gérer les requêtes
 export default async (req: express.Request, res: express.Response) => {
-  if (!server) {
+  if (!req.body) {
     await bootstrap();
   }
   server(req, res);
