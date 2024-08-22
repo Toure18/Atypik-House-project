@@ -40,8 +40,8 @@ export class PaymentService {
         },
       ],
       mode: 'payment',
-      success_url: 'http://localhost:3000/PaymentSuccess',
-      cancel_url: 'http://localhost:3000/PaymentError',
+      success_url: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentSuccess',
+      cancel_url: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentError',
     });
     
     payment.price = createPaymentDto.price;
