@@ -13,7 +13,7 @@ async function bootstrap() {
 
   // Configuration CORS
   app.enableCors({
-    origin: 'https://atypichouse-dfb81.web.app',
+    origin: 'http://localhost:3000/',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
