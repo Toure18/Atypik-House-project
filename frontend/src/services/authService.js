@@ -2,7 +2,7 @@ import axios from 'axios';
 import apiInstance from './apiInstance';
 
 
-const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/auth/';
+const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/auth';
 
 const register = (firstname, lastname, email, password, accountType) => {
   return axios.post(API_URL + 'register', {

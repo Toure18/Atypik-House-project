@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode'; // Changement ici
 import AuthService from './authService';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/auth/';
+const API_URL = 'https://atypik-house-project-jsrprk3fs-toure18s-projects.vercel.app/auth';
 
 // Créer une instance Axios pour intercepter les requêtes
 const apiInstance = axios.create();
