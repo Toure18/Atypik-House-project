@@ -8,8 +8,12 @@ import Inscription from './inscription/inscription';
 import Reservation from './reservation/reservation';
 import Paiement from './paiement/paiement';
 import Footer from './includes/Footer';
+import RentalListProp from './proprietaire/list';
+import RentalListPage from './listbiens/listbiens';
+import AddProperty from './proprietaire/addbien'
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
+import ContactForm from './contact/contact';
 import './App.css';
 
 function App() {
@@ -24,6 +28,10 @@ function App() {
             <Route path="/accueil" element={<PageAccueil />} />
             <Route path="/reservation" element={<Reservation />} />
             <Route path="/Paymentstatus" element={<Paiement />} />
+            <Route path="/biens" element={<RentalListPage />} />
+            <Route path="/mesbiens" element={<RentalListProp />} />
+            <Route path="/addbien" element={<AddProperty />} />
+            <Route path="/contact" element={<ContactForm />} />
           </Routes>
           <Footer />
         </div>
