@@ -7,7 +7,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['https://f2i-dsp4-g3-mt-mz-ai-admin.web.app', 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app'],
+    origin: function(origin, callback) {
+      const allowedOrigins = [
+        'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app',
+        'https://f2i-dsp4-g3-mt-mz-ai-admin.web.app'
+      ];
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
     credentials: true,
