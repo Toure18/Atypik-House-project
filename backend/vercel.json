@@ -11,7 +11,7 @@
       "source": "/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app" },
+        { "key": "Access-Control-Allow-Origin", "value": "https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app, https://f2i-dsp4-g3-mt-mz-ai-admin.web.app" },
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
       ]
