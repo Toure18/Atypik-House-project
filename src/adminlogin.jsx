@@ -1,24 +1,31 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import AuthService from './services/authService';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (email === 'admin@atypik.com' && password === 'admin') {
-      console.log('Connexion réussie');
-      navigate('/'); 
-    } else {
-      console.log('Échec de la connexion');
-      alert('Email ou mot de passe incorrect');
+  const handleLogin = async () => {
+    try {
+      const userData = await AuthService.login(email, password);
+
+      if (userData && userData.access_token) {
+        console.log('Connexion réussie');
+        navigate('/proprietes');
+      } else {
+        console.log('Échec de la connexion');
+        alert('Email ou mot de passe incorrect');
+      }
+    } catch (error) {
+      console.log('Erreur lors de la connexion:', error);
+      alert('Échec de la connexion: Email ou mot de passe incorrect');
     }
   };
 
   return (
-
     <Box 
       sx={{ 
         display: 'flex', 
@@ -110,7 +117,7 @@ const AdminLogin = () => {
           Connexion
         </Button>
       </Box>
-      </Box>
+    </Box>
   );
 };
 

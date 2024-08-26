@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -10,56 +10,74 @@ import {
   TableRow,
   Paper,
   Typography,
-  IconButton,
   Button
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
+import BookingService from './services/reservationService';
 
 const ReservationList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const reservations = [
-    {
-      id: 1,
-      tenantFirstName: 'Alice',
-      tenantLastName: 'Martin',
-      ownerFirstName: 'John',
-      ownerLastName: 'Doe',
-      startDate: '2024-08-01',
-      endDate: '2024-08-10',
-      totalPayment: 1200,
-    },
-    {
-      id: 2,
-      tenantFirstName: 'Bob',
-      tenantLastName: 'Brown',
-      ownerFirstName: 'Jane',
-      ownerLastName: 'Smith',
-      startDate: '2024-08-05',
-      endDate: '2024-08-15',
-      totalPayment: 1500,
-    },
-    {
-      id: 3,
-      tenantFirstName: 'Charlie',
-      tenantLastName: 'Davis',
-      ownerFirstName: 'Michael',
-      ownerLastName: 'Johnson',
-      startDate: '2024-08-10',
-      endDate: '2024-08-20',
-      totalPayment: 1800,
-    },
-    
-  ];
+  const [reservations, setReservations] = useState([]);
 
-  const filteredReservations = reservations.filter(reservation => {
-    return (
-      reservation.tenantFirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reservation.tenantLastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reservation.ownerFirstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reservation.ownerLastName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const response = await BookingService.getAllBookings();
+        setReservations(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des réservations:', error);
+      }
+    };
+
+    fetchReservations();
+  }, []);
+  
+  const filteredReservations = reservations.filter((reservation) => {
+    const tenantFirstname = reservation.user?.firstname || '';
+    const tenantLastname = reservation.user?.lastname || '';
+    
+    const tenantName = (tenantFirstname + ' ' + tenantLastname).toLowerCase();
+    
+    return tenantName.includes(searchTerm.toLowerCase());
   });
+
+
+  const calculateTotalPayment = (reservation) => {
+    const { beginDate, endDate, property } = reservation;
+    const pricePerNight = property?.price || 0;
+
+    if (!beginDate || !endDate) return 0;
+
+    const startDate = new Date(beginDate);
+    const endDateObj = new Date(endDate);
+  
+
+    // Calcul du nombre de nuits
+    const nights = Math.ceil((endDateObj - startDate) / (1000 * 60 * 60 * 24));
+
+
+    // Calcul du montant total
+    const totalPayment = nights * pricePerNight;
+   
+
+    return totalPayment;
+  };
+
+  const handleCancelReservation = async (id) => {
+    if (window.confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+      try {
+        await BookingService.deleteBooking(id);
+        setReservations((prevReservations) =>
+          prevReservations.filter((reservation) => reservation.id !== id)
+        );
+        alert('Réservation annulée avec succès.');
+      } catch (error) {
+        console.error('Erreur lors de l\'annulation de la réservation:', error);
+        alert('Une erreur est survenue lors de l\'annulation de la réservation.');
+      }
+    }
+  };
 
   return (
     <main className="main-container">
@@ -102,9 +120,9 @@ const ReservationList = () => {
             startIcon={<AddIcon />}
             sx={{ color: '#fff', borderColor: '#fff' }}
             href='/addreservation'
-            >   
-                Ajouter une réservation
-            </Button>
+          >
+            Ajouter une réservation
+          </Button>
         </Box>
         <TableContainer component={Paper} sx={{ boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', width: '100%' }}>
           <Table sx={{ width: '100%' }}>
@@ -115,12 +133,6 @@ const ReservationList = () => {
                 </TableCell>
                 <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', fontWeight: 'bold' }}>
                   Nom du Locataire
-                </TableCell>
-                <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', fontWeight: 'bold' }}>
-                  Prénom du Propriétaire
-                </TableCell>
-                <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', fontWeight: 'bold' }}>
-                  Nom du Propriétaire
                 </TableCell>
                 <TableCell
                   sx={{
@@ -171,16 +183,10 @@ const ReservationList = () => {
                   sx={{ backgroundColor: '#D87C49', '&:hover': { backgroundColor: '#D5926D' } }}
                 >
                   <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
-                    {reservation.tenantFirstName}
+                    {reservation.user?.firstname || 'N/A'}
                   </TableCell>
                   <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
-                    {reservation.tenantLastName}
-                  </TableCell>
-                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
-                    {reservation.ownerFirstName}
-                  </TableCell>
-                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
-                    {reservation.ownerLastName}
+                    {reservation.user?.lastname || 'N/A'}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -189,7 +195,7 @@ const ReservationList = () => {
                       textAlign: 'center',
                     }}
                   >
-                    {reservation.startDate}
+                    {reservation.beginDate}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -207,7 +213,7 @@ const ReservationList = () => {
                       textAlign: 'center',
                     }}
                   >
-                    {reservation.totalPayment} €
+                    {calculateTotalPayment(reservation).toFixed(2)} €
                   </TableCell>
                   <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
                     <Button
@@ -215,6 +221,7 @@ const ReservationList = () => {
                       color="error"
                       size="small"
                       sx={{ color: '#fff', borderColor: '#fff' }}
+                      onClick={() => handleCancelReservation(reservation.id)}
                     >
                       Annuler
                     </Button>

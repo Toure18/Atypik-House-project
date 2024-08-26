@@ -1,19 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import BookingService from './services/reservationService';
+import PropertiesService from './services/propertieService';
+import UsersService from './services/usersService';
+import { useNavigate} from 'react-router-dom';
+
 
 const AddReservation = () => {
   const [reservation, setReservation] = useState({
     propertyId: '',
-    tenantFirstName: '',
-    tenantLastName: '',
+    userId: '', 
     startDate: '',
     endDate: '',
     totalPayment: '',
   });
 
-  const handleSave = () => {
-    console.log('Réservation ajoutée', reservation);
-    
+  const [properties, setProperties] = useState([]);
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+
+
+  // Fetch properties and users when the component mounts
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await PropertiesService.getAllProperties();
+        setProperties(response.data); 
+      } catch (error) {
+        console.error('Erreur lors de la récupération des propriétés:', error);
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const response = await UsersService.getUsers();
+        setUsers(response); 
+      } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs:', error);
+      }
+    };
+
+    fetchProperties();
+    fetchUsers();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      // Préparer les données pour la réservation
+      const bookingData = {
+        beginDate: reservation.startDate,
+        endDate: reservation.endDate,
+        userId: reservation.userId, // Change this from user object to userId
+      };
+
+      // Appeler le service pour créer la réservation
+      await BookingService.createBooking(bookingData, reservation.propertyId);
+
+      alert('Réservation ajoutée avec succès');
+      // Réinitialiser le formulaire après l'ajout
+      setReservation({
+        propertyId: '',
+        userId: '', // Reset userId
+        startDate: '',
+        endDate: '',
+        totalPayment: '',
+      });
+      navigate('/reservations');
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la réservation:', error);
+      alert('Une erreur est survenue lors de l\'ajout de la réservation.');
+    }
   };
 
   const handleChange = (event) => {
@@ -23,7 +79,6 @@ const AddReservation = () => {
       [name]: value,
     });
   };
-
   return (
     <main className="main-container">
       <Box sx={{ p: 3, backgroundColor: '#D87C49' }}>
@@ -53,72 +108,43 @@ const AddReservation = () => {
               },
             }}
           >
-            <MenuItem value="1">Appartement Luxueux</MenuItem>
-            <MenuItem value="2">Chambre Confort</MenuItem>
-            <MenuItem value="3">Studio Moderne</MenuItem>
-            <MenuItem value="4">Maison Spacieuse</MenuItem>
+            {properties.map((property) => (
+              <MenuItem key={property.id} value={property.id}>
+                {property.name} {/* Assuming the property has a 'name' field */}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
-        <TextField
-          label="Prénom du Locataire"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          name="tenantFirstName"
-          value={reservation.tenantFirstName}
-          onChange={handleChange}
-          sx={{
-            input: { color: '#ffff' },
-            label: { color: '#ffff' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#ffff',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffff',
-              },
-            },
-            '& .MuiInputLabel-root': {
+        <FormControl fullWidth variant="outlined" margin="normal" sx={{ backgroundColor: 'transparent' }}>
+          <InputLabel sx={{ color: '#ffff' }}>Locataire</InputLabel>
+          <Select
+            label="Locataire"
+            name="userId"
+            value={reservation.userId}
+            onChange={handleChange}
+            sx={{
               color: '#ffff',
-            },
-            '& .MuiOutlinedInput-input': {
-              color: '#ffff',
-            },
-          }}
-        />
-        <TextField
-          label="Nom du Locataire"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          name="tenantLastName"
-          value={reservation.tenantLastName}
-          onChange={handleChange}
-          sx={{
-            input: { color: '#ffff' },
-            label: { color: '#ffff' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
+              '& .MuiOutlinedInput-notchedOutline': {
                 borderColor: '#ffff',
               },
-              '&:hover fieldset': {
+              '&:hover .MuiOutlinedInput-notchedOutline': {
                 borderColor: '#ffff',
               },
-              '&.Mui-focused fieldset': {
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                 borderColor: '#ffff',
               },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#ffff',
-            },
-            '& .MuiOutlinedInput-input': {
-              color: '#ffff',
-            },
-          }}
-        />
+              '& .MuiSelect-icon': {
+                color: '#ffff',
+              },
+            }}
+          >
+            {users.map((user) => (
+              <MenuItem key={user.id} value={user.id}>
+                {`${user.firstname} ${user.lastname}`} {/* Assuming the user has 'firstname' and 'lastname' fields */}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <TextField
           label="Date de Début"
           type="date"

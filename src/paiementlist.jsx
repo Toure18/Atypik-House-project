@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -12,40 +12,38 @@ import {
   Typography,
   Select,
   MenuItem,
-  FormControl, // Ajout de l'importation de FormControl
+  FormControl,
   InputLabel
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import PaymentService from './services/paymentService'
 
 const PaymentList = () => {
+  const [payments, setPayments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
-  const payments = [
-    {
-      id: 1,
-      reservationId: 101,
-      amount: 1200,
-      status: 'Payé',
-    },
-    {
-      id: 2,
-      reservationId: 102,
-      amount: 1500,
-      status: 'Remboursé',
-    },
-    {
-      id: 3,
-      reservationId: 103,
-      amount: 1800,
-      status: 'Payé',
-    },
-    
-  ];
 
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const data = await PaymentService.findAll(); // Récupère les paiements depuis l'API
+        setPayments(data);
+      } catch (error) {
+        console.error('Erreur lors de la réception de la liste de paiements:', error);
+      }
+    };
+
+    fetchPayments();
+  }, []);
+
+  // Extraction des statuts uniques pour le filtrage
+  const uniqueStatuses = [...new Set(payments.map(payment => payment.status))];
+
+  // Filtrage des paiements par recherche et statut
   const filteredPayments = payments.filter(payment => {
     return (
       (filter === '' || payment.status === filter) &&
-      payment.reservationId.toString().includes(searchTerm)
+      payment.booking?.id.toString().includes(searchTerm)
     );
   });
 
@@ -111,8 +109,11 @@ const PaymentList = () => {
                 }}
               >
                 <MenuItem value="">Tous les statuts</MenuItem>
-                <MenuItem value="Payé">Payé</MenuItem>
-                <MenuItem value="Remboursé">Remboursé</MenuItem>
+                {uniqueStatuses.map((status) => (
+                  <MenuItem key={status} value={status}>
+                    {status}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -152,7 +153,9 @@ const PaymentList = () => {
                   key={payment.id}
                   sx={{ backgroundColor: '#D87C49', '&:hover': { backgroundColor: '#D5926D' } }}
                 >
-                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>{payment.reservationId}</TableCell>
+                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
+                    {payment.booking ? payment.booking.id : 'Non attribué'}
+                  </TableCell>
                   <TableCell
                     sx={{
                       color: '#fff',
@@ -160,7 +163,7 @@ const PaymentList = () => {
                       textAlign: 'center',
                     }}
                   >
-                    {payment.amount} €
+                    {payment.price} €
                   </TableCell>
                   <TableCell
                     sx={{

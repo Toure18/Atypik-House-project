@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+// src/components/AdminList.js
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UsersService from './services/usersService';
 import {
   Box,
   TextField,
@@ -12,27 +14,39 @@ import {
   Paper,
   Typography,
   IconButton,
-  Button,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
-import AddIcon from '@mui/icons-material/Add';
 
 const AdminList = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [adminStatus, setAdminStatus] = useState({});
 
-  const admins = [
-    { id: 1, firstName: 'Alice', lastName: 'Johnson', email: 'alice@example.com', isActive: true },
-    { id: 2, firstName: 'Bob', lastName: 'Smith', email: 'bob@example.com', isActive: false },
-    { id: 3, firstName: 'Charlie', lastName: 'Brown', email: 'charlie@example.com', isActive: true },
-  ];
+  useEffect(() => {
+    const fetchAdmins = async () => {
+      try {
+        const users = await UsersService.getUsers();
+        const adminUsers = users.filter(user => user.accountType === 'admin');
+        setAdmins(adminUsers);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des utilisateurs:', error);
+        setError('Erreur lors de la récupération des utilisateurs.');
+        setLoading(false);
+      }
+    };
+
+    fetchAdmins();
+  }, []);
 
   const handleViewProfile = (id) => {
-    navigate(`/EditAccount`);
+    navigate(`/EditAccount/${id}`);
   };
 
   const handleToggleStatus = (id) => {
@@ -44,11 +58,19 @@ const AdminList = () => {
 
   const filteredAdmins = admins.filter(admin => {
     return (
-      admin.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      admin.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
       admin.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
+
+  if (loading) {
+    return <Typography variant="h6">Chargement...</Typography>;
+  }
+
+  if (error) {
+    return <Typography variant="h6">{error}</Typography>;
+  }
 
   return (
     <main className='main-container'>
@@ -58,41 +80,32 @@ const AdminList = () => {
         </Typography>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} flexWrap="wrap">
           <Box display="flex" gap={2} sx={{ backgroundColor: '#D87C49', p: 1, borderRadius: '4px', flexWrap: 'wrap' }}>
-          <TextField
-            variant="outlined"
-            placeholder="Rechercher..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              startAdornment: <SearchIcon sx={{ color: '#fff' }} />,
-            }}
-            sx={{
-              input: { color: '#fff', padding: '10px 12px' },
-              fieldset: { borderColor: 'transparent' },
-              '& .MuiOutlinedInput-root': {
-                '&:hover fieldset': {
-                  borderColor: '#fff',
+            <TextField
+              variant="outlined"
+              placeholder="Rechercher..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: <SearchIcon sx={{ color: '#fff' }} />,
+              }}
+              sx={{
+                input: { color: '#fff', padding: '10px 12px' },
+                fieldset: { borderColor: 'transparent' },
+                '& .MuiOutlinedInput-root': {
+                  '&:hover fieldset': {
+                    borderColor: '#fff',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#fff',
+                  },
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#fff',
-                },
-              },
-              backgroundColor: '#D87C49',
-              borderRadius: '4px',
-              height: '40px',
-              flex: 1,
-            }}
-          />
-        </Box>
-        <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            startIcon={<AddIcon />}
-            sx={{ color: '#fff', borderColor: '#fff' }}
-            >   
-                Ajouter un nouveau compte admin
-            </Button>
+                backgroundColor: '#D87C49',
+                borderRadius: '4px',
+                height: '40px',
+                flex: 1,
+              }}
+            />
+          </Box>
         </Box>
         <TableContainer component={Paper} sx={{ boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', width: '100%' }}>
           <Table sx={{ width: '100%' }}>
@@ -169,7 +182,7 @@ const AdminList = () => {
                       borderRight: 'none',
                     }}
                   >
-                    {admin.firstName}
+                    {admin.firstname}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -179,7 +192,7 @@ const AdminList = () => {
                       borderRight: 'none',
                     }}
                   >
-                    {admin.lastName}
+                    {admin.lastname}
                   </TableCell>
                   <TableCell
                     sx={{

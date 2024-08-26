@@ -1,9 +1,19 @@
-import React from 'react';
-import { IconButton } from '@mui/material';
+import React, { useState } from 'react';
+import { IconButton, Typography } from '@mui/material';
 import { BsFillBellFill, BsPersonCircle, BsFillEnvelopeFill, BsJustify } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import authService from './services/authService';
+
 
 function Header({ OpenSidebar }) {
+  const handleLogout = () => {
+    authService.logout();
+    window.location.href = '/login';
+  };
+
+  const isConnect = authService.isAuthenticated();
+  
+
   return (
     <header className='header'>
       <div className='menu-icon'>
@@ -18,7 +28,11 @@ function Header({ OpenSidebar }) {
         <IconButton href='./messagelist'>
             <BsFillEnvelopeFill className='icon'/>
         </IconButton>
-            <BsPersonCircle className='icon' />
+        {isConnect ? (
+          <IconButton onClick={handleLogout}>
+            <Typography>Déconnexion</Typography>
+          </IconButton>
+        ) : null}
         
       </div>
     </header>

@@ -1,24 +1,44 @@
+// src/components/EditAccount.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { useParams, useNavigate } from 'react-router-dom';
+import UsersService from './services/usersService';
+import { Box, Typography, TextField, Button } from '@mui/material';
 
-const EditAccount = ({ userData }) => {
-  const { id } = useParams(); // Récupère l'ID de l'utilisateur depuis l'URL
-
-  // Initialiser l'état avec les données de l'utilisateur existant
+const EditAccount = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [user, setUser] = useState({
-    firstName: userData?.firstName || '',
-    lastName: userData?.lastName || '',
-    email: userData?.email || '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    accountType: '' // Ajout du champ accountType pour les admins
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    
+    const fetchUser = async () => {
+      try {
+        const userData = await UsersService.getUser(id);
+        setUser(userData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données utilisateur:', error);
+        setError('Erreur lors de la récupération des données utilisateur.');
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, [id]);
 
-  const handleSave = () => {
-    console.log('Compte modifié', user);
-    
+  const handleSave = async () => {
+    try {
+      console.log('Compte modifié', user);
+      navigate('/AdminList');
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde des modifications:', error);
+    }
   };
 
   const handleChange = (event) => {
@@ -28,6 +48,14 @@ const EditAccount = ({ userData }) => {
       [name]: value,
     });
   };
+
+  if (loading) {
+    return <Typography variant="h6">Chargement...</Typography>;
+  }
+
+  if (error) {
+    return <Typography variant="h6">{error}</Typography>;
+  }
 
   return (
     <main className="main-container">
@@ -41,7 +69,7 @@ const EditAccount = ({ userData }) => {
           fullWidth
           margin="normal"
           name="firstName"
-          value={user.firstName}
+          value={user[0].firstname || ''}
           onChange={handleChange}
           sx={{
             input: { color: '#fff' },
@@ -71,7 +99,7 @@ const EditAccount = ({ userData }) => {
           fullWidth
           margin="normal"
           name="lastName"
-          value={user.lastName}
+          value={user[0].lastname || ''}
           onChange={handleChange}
           sx={{
             input: { color: '#fff' },
@@ -101,7 +129,37 @@ const EditAccount = ({ userData }) => {
           fullWidth
           margin="normal"
           name="email"
-          value={user.email}
+          value={user[0].email || ''}
+          onChange={handleChange}
+          sx={{
+            input: { color: '#fff' },
+            label: { color: '#fff' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#fff',
+              },
+              '&:hover fieldset': {
+                borderColor: '#fff',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#fff',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#fff',
+            },
+            '& .MuiOutlinedInput-input': {
+              color: '#fff',
+            },
+          }}
+        />
+        <TextField
+          label="Type de compte"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="accountType"
+          value={user[0].accountType || ''}
           onChange={handleChange}
           sx={{
             input: { color: '#fff' },

@@ -1,28 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { Box, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import PropertiesService from './services/propertieService';
 
-const EditProperty = ({ propertyData }) => {
-  const { id } = useParams(); 
+function EditProperty() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const prop = location.state || {};
   const [property, setProperty] = useState({
-    title: propertyData?.title || '',
-    type: propertyData?.type || '',
-    rooms: propertyData?.rooms || '',
-    capacity: propertyData?.capacity || '',
-    pricePerNight: propertyData?.pricePerNight || '',
-    ownerFirstName: propertyData?.ownerFirstName || '',
-    ownerLastName: propertyData?.ownerLastName || '',
-    photos: propertyData?.photos || [],
+    name: '',
+    description: '',
+    type: '',
+    piecesNb: '',
+    capacity: '',
+    price: '',
+    pictures: [],
+    availability_begin: '',
+    availability_end: '',
   });
-
+  
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  
   useEffect(() => {
+    const fetchProperty = async () => {
+      try {
+        const response = await PropertiesService.getPropertyById(id);
+        const data = response.data;
+        console.log(data)
+        setProperty({
+          ...data,
+          pictures: Array.isArray(data.pictures) ? data.pictures : [],
+        });
+      } catch (error) {
+        console.error('Erreur lors du chargement de la propriété', error);
+      }
+    };
 
+    fetchProperty();
   }, [id]);
 
-  const handleSave = () => {
-    console.log('Propriété modifiée', property);
-    
+  const handleSave = async () => {
+    try {
+      await PropertiesService.updateProperty(id, property);
+      setSnackbarMessage('Propriété modifiée avec succès !');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        navigate('/proprietes');
+      }, 1500);
+    } catch (error) {
+      console.error('Erreur lors de la modification de la propriété', error);
+      setSnackbarMessage('Erreur lors de la modification de la propriété. Veuillez réessayer.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
   };
 
   const handleChange = (event) => {
@@ -34,19 +69,23 @@ const EditProperty = ({ propertyData }) => {
   };
 
   const handleFileChange = (event, index) => {
-    const newPhotos = [...property.photos];
-    newPhotos[index] = event.target.files[0]; //  POUR Remplacer ou ajouter la photo
+    const newPictures = [...property.pictures];
+    newPictures[index] = event.target.files[0];
     setProperty({
       ...property,
-      photos: newPhotos,
+      pictures: newPictures,
     });
   };
 
   const addPhotoInput = () => {
     setProperty({
       ...property,
-      photos: [...property.photos, null], // POUR Ajouter une entrée vide pour une nouvelle photo
+      pictures: [...property.pictures, null],
     });
+  };
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -56,12 +95,12 @@ const EditProperty = ({ propertyData }) => {
           Modifier la Propriété
         </Typography>
         <TextField
-          label="Titre de la Propriété"
+          label="Nom de la Propriété"
           variant="outlined"
           fullWidth
           margin="normal"
-          name="title"
-          value={property.title}
+          name="name"
+          value={property.name}
           onChange={handleChange}
           sx={{
             input: { color: '#ffff' },
@@ -85,42 +124,73 @@ const EditProperty = ({ propertyData }) => {
             },
           }}
         />
-        <FormControl fullWidth variant="outlined" margin="normal" sx={{ backgroundColor: 'transparent' }}>
-          <InputLabel sx={{ color: '#ffff' }}>Type de Propriété</InputLabel>
-          <Select
-            label="Type de Propriété"
-            name="type"
-            value={property.type}
-            onChange={handleChange}
-            sx={{
+        <TextField
+          label="Description"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="description"
+          value={property.description}
+          onChange={handleChange}
+          sx={{
+            input: { color: '#ffff' },
+            label: { color: '#ffff' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#ffff',
+              },
+              '&:hover fieldset': {
+                borderColor: '#ffff',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#ffff',
+              },
+            },
+            '& .MuiInputLabel-root': {
               color: '#ffff',
-              '& .MuiOutlinedInput-notchedOutline': {
+            },
+            '& .MuiOutlinedInput-input': {
+              color: '#ffff',
+            },
+          }}
+        />
+        <TextField
+          label="Type de Propriété"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="type"
+          value={property.type}
+          onChange={handleChange}
+          sx={{
+            input: { color: '#ffff' },
+            label: { color: '#ffff' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
                 borderColor: '#ffff',
               },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
+              '&:hover fieldset': {
                 borderColor: '#ffff',
               },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              '&.Mui-focused fieldset': {
                 borderColor: '#ffff',
               },
-              '& .MuiSelect-icon': {
-                color: '#ffff',
-              },
-            }}
-          >
-            <MenuItem value="Appartement">Appartement</MenuItem>
-            <MenuItem value="Chambre">Chambre</MenuItem>
-            <MenuItem value="Studio">Studio</MenuItem>
-            <MenuItem value="Maison">Maison</MenuItem>
-          </Select>
-        </FormControl>
+            },
+            '& .MuiInputLabel-root': {
+              color: '#ffff',
+            },
+            '& .MuiOutlinedInput-input': {
+              color: '#ffff',
+            },
+          }}
+        />
         <TextField
           label="Nombre de Pièces"
           variant="outlined"
           fullWidth
           margin="normal"
-          name="rooms"
-          value={property.rooms}
+          name="piecesNb"
+          value={property.piecesNb}
           onChange={handleChange}
           sx={{
             input: { color: '#ffff' },
@@ -145,7 +215,7 @@ const EditProperty = ({ propertyData }) => {
           }}
         />
         <TextField
-          label="Capacité (nombre de personnes)"
+          label="Capacité"
           variant="outlined"
           fullWidth
           margin="normal"
@@ -174,11 +244,107 @@ const EditProperty = ({ propertyData }) => {
             },
           }}
         />
-        <Typography variant="h6" gutterBottom sx={{ mt: 3, color: '#ffff' }}>
-          Photos de la Propriété
-        </Typography>
-        {property.photos.map((photo, index) => (
+        <TextField
+          label="Prix"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="price"
+          value={property.price}
+          onChange={handleChange}
+          sx={{
+            input: { color: '#ffff' },
+            label: { color: '#ffff' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#ffff',
+              },
+              '&:hover fieldset': {
+                borderColor: '#ffff',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#ffff',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#ffff',
+            },
+            '& .MuiOutlinedInput-input': {
+              color: '#ffff',
+            },
+          }}
+        />
+        <TextField
+          label="Date de Début"
+          type="date"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="availability_begin"
+          value={property.availability_begin}
+          onChange={handleChange}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          sx={{
+            input: { color: '#ffff' },
+            label: { color: '#ffff' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#ffff',
+              },
+              '&:hover fieldset': {
+                borderColor: '#ffff',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#ffff',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#ffff',
+            },
+            '& .MuiOutlinedInput-input': {
+              color: '#ffff',
+            },
+          }}
+        />
+        <TextField
+          label="Date de Fin"
+          type="date"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="availability_end"
+          value={property.availability_end}
+          onChange={handleChange}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          sx={{
+            input: { color: '#ffff' },
+            label: { color: '#ffff' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#ffff',
+              },
+              '&:hover fieldset': {
+                borderColor: '#ffff',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#ffff',
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: '#ffff',
+            },
+            '& .MuiOutlinedInput-input': {
+              color: '#ffff',
+            },
+          }}
+        />
+        {Array.isArray(property.pictures) && property.pictures.map((photo, index) => (
           <Box key={index} sx={{ mb: 2 }}>
+            {photo && <img src={URL.createObjectURL(photo)} alt={`photo-${index}`} style={{ width: '100px', height: '100px' }} />}
             <TextField
               type="file"
               variant="outlined"
@@ -213,96 +379,6 @@ const EditProperty = ({ propertyData }) => {
         >
           Ajouter une autre photo
         </Button>
-        <TextField
-          label="Prix par Nuit (€)"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          name="pricePerNight"
-          value={property.pricePerNight}
-          onChange={handleChange}
-          sx={{
-            input: { color: '#ffff' },
-            label: { color: '#ffff' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#ffff',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffff',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#ffff',
-            },
-            '& .MuiOutlinedInput-input': {
-              color: '#ffff',
-            },
-          }}
-        />
-        <TextField
-          label="Prénom du Propriétaire"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          name="ownerFirstName"
-          value={property.ownerFirstName}
-          onChange={handleChange}
-          sx={{
-            input: { color: '#ffff' },
-            label: { color: '#ffff' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#ffff',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffff',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#ffff',
-            },
-            '& .MuiOutlinedInput-input': {
-              color: '#ffff',
-            },
-          }}
-        />
-        <TextField
-          label="Nom du Propriétaire"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          name="ownerLastName"
-          value={property.ownerLastName}
-          onChange={handleChange}
-          sx={{
-            input: { color: '#ffff' },
-            label: { color: '#ffff' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#ffff',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffff',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffff',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#ffff',
-            },
-            '& .MuiOutlinedInput-input': {
-              color: '#ffff',
-            },
-          }}
-        />
         <Button
           variant="contained"
           color="primary"
@@ -311,6 +387,15 @@ const EditProperty = ({ propertyData }) => {
         >
           Enregistrer les Modifications
         </Button>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Box>
     </main>
   );

@@ -1,67 +1,69 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Box,
-    TextField,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Typography,
-    Button,
-    IconButton,
+  Box,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  IconButton,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PropertiesService from './services/propertieService';
+import { useNavigate } from 'react-router-dom';
 
 const PropertyList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('');
-  const properties = [
-    {
-      id: 1,
-      title: 'Appartement Luxueux',
-      type: 'Appartement',
-      rooms: 3,
-      capacity: 5,
-      pricePerNight: 120,
-      ownerFirstName: 'John',
-      ownerLastName: 'Doe',
-    },
-    {
-      id: 2,
-      title: 'Chambre Confort',
-      type: 'Chambre',
-      rooms: 1,
-      capacity: 2,
-      pricePerNight: 60,
-      ownerFirstName: 'Jane',
-      ownerLastName: 'Smith',
-    },
-    {
-      id: 3,
-      title: 'Studio Moderne',
-      type: 'Studio',
-      rooms: 1,
-      capacity: 2,
-      pricePerNight: 80,
-      ownerFirstName: 'Michael',
-      ownerLastName: 'Johnson',
-    },
-    
-  ];
+  const [properties, setProperties] = useState([]);
+  const [uniqueTypes, setUniqueTypes] = useState([]);
+  const navigate = useNavigate();
 
-  const filteredProperties = properties.filter(property => {
+  const handleEditClick = (property) => {
+    navigate(`/editproperty/${property.id}`, { state: { property } });
+  };
+
+  const handleDeleteClick = (propertyId) => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette propriété ?')) {
+      PropertiesService.deleteProperty(propertyId)
+        .then(() => {
+          setProperties(properties.filter((property) => property.id !== propertyId));
+        })
+        .catch((error) => {
+          console.error('Erreur lors de la suppression de la propriété :', error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    PropertiesService.getAllProperties()
+      .then((response) => {
+        setProperties(response.data);
+        const types = response.data.map((property) => property.type);
+        const uniqueTypes = [...new Set(types)];
+        setUniqueTypes(uniqueTypes);
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la récupération des propriétés :', error);
+      });
+  }, []);
+
+  const filteredProperties = properties.filter((property) => {
     return (
-      property.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      property.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filter === '' || property.type === filter)
     );
   });
@@ -129,10 +131,11 @@ const PropertyList = () => {
                 }}
               >
                 <MenuItem value="">Tous les types</MenuItem>
-                <MenuItem value="Appartement">Appartement</MenuItem>
-                <MenuItem value="Chambre">Chambre</MenuItem>
-                <MenuItem value="Studio">Studio</MenuItem>
-                <MenuItem value="Maison">Maison</MenuItem>
+                {uniqueTypes.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
@@ -142,10 +145,10 @@ const PropertyList = () => {
             size="small"
             startIcon={<AddIcon />}
             sx={{ color: '#fff', borderColor: '#fff' }}
-            href='./addproperty'
-            >  
-                Ajouter une propriété
-            </Button>
+            href="./addproperty"
+          >
+            Ajouter une propriété
+          </Button>
         </Box>
         <TableContainer component={Paper} sx={{ boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', width: '100%' }}>
           <Table sx={{ width: '100%' }}>
@@ -190,9 +193,7 @@ const PropertyList = () => {
                 <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', fontWeight: 'bold' }}>
                   Propriétaire
                 </TableCell>
-                <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', fontWeight: 'bold' }}>
-                  
-                </TableCell>
+                <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', fontWeight: 'bold' }}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -201,7 +202,7 @@ const PropertyList = () => {
                   key={property.id}
                   sx={{ backgroundColor: '#D87C49', '&:hover': { backgroundColor: '#D5926D' } }}
                 >
-                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>{property.title}</TableCell>
+                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>{property.name}</TableCell>
                   <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>{property.type}</TableCell>
                   <TableCell
                     sx={{
@@ -210,7 +211,7 @@ const PropertyList = () => {
                       textAlign: 'center',
                     }}
                   >
-                    {property.rooms}
+                    {property.piecesNb}
                   </TableCell>
                   <TableCell
                     sx={{
@@ -228,14 +229,17 @@ const PropertyList = () => {
                       textAlign: 'center',
                     }}
                   >
-                    {property.pricePerNight} €
+                    {property.price} €
                   </TableCell>
                   <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
-                    {property.ownerFirstName} {property.ownerLastName}
+                    {property.user.firstname} {property.user.lastname}
                   </TableCell>
-                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000' }}>
-                    <IconButton sx={{ color: '#fff' }} href='/editproperty'>
-                    <EditIcon />
+                  <TableCell sx={{ color: '#fff', borderBottom: '1px solid #000', display: 'flex', justifyContent: 'center' }}>
+                    <IconButton sx={{ color: '#fff' }} onClick={() => handleEditClick(property)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton sx={{ color: '#fff' }} onClick={() => handleDeleteClick(property.id)}>
+                      <DeleteIcon />
                     </IconButton>
                   </TableCell>
                 </TableRow>

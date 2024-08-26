@@ -32,7 +32,7 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
             </li>
             <li className='sidebar-list-item'>
                 <a href="/reservations">
-                    <BsFillGrid3X3GapFill className='icon'/> Reservtions
+                    <BsFillGrid3X3GapFill className='icon'/> Reservations
                 </a>
             </li>
             <li className='sidebar-list-item'>
