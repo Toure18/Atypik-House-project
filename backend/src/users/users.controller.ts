@@ -19,6 +19,14 @@ export class UsersController {
     return this.service.getUser(params.id);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiResponse({ status: 200, description: 'Return a list of all users.', type: [User] })
+  @ApiResponse({ status: 404, description: 'No users found.' })
+  getAll() {
+    return this.service.getUsers();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'The user has been successfully created.', type: User })

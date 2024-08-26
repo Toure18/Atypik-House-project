@@ -56,6 +56,17 @@ export class BookingService {
     
   }
 
+  async findAllByUser(userId): Promise<any> {
+
+    const result = await this.bookingRepository.find({
+      relations: ['user', 'property'],
+      where: [{user: {id: userId} }]
+    }
+    
+    );
+    return result;
+  }
+
   async update(id: number, updateBookingDto: UpdateBookingDto) {
     const booking = await this.bookingRepository.findOne({ where: { id } });
     if (!booking) {
@@ -65,6 +76,8 @@ export class BookingService {
     Object.assign(booking, updateBookingDto);
     return this.bookingRepository.save(booking);
   }
+  
+  
 
   remove(id: number) {
     return this.bookingRepository.delete(id);

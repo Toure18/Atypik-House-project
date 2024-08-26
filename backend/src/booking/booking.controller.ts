@@ -32,6 +32,14 @@ export class BookingController {
     return this.bookingService.findAll();
   }
 
+  @Get('/my-bookings')
+  @ApiOperation({ summary: 'Get all booking of the user' })
+  @ApiResponse({ status: 200, description: 'Return all booking of the user.', type: [Booking] })
+  findAllByUser(@Request() req) {
+    const userId = req.user;
+    return this.bookingService.findAllByUser(userId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get booking by id' })
   @ApiResponse({ status: 200, description: 'Return the booking by id.', type: Booking })
@@ -56,4 +64,5 @@ export class BookingController {
   remove(@Param('id') id: string) {
     return this.bookingService.remove(+id);
   }
+  
 }

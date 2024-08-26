@@ -36,10 +36,13 @@ export class AuthService {
      
       const payload = `${userData.id}`;
       const accessToken = this.jwtService.sign(payload);
+      const accountType = `${userData.accountType}`;
 
       return {
         expires_in: 3600,
         access_token: accessToken,
+        accountType: accountType,
+        id: payload,
       }
     });
   }

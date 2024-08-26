@@ -6,6 +6,7 @@ import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Payment } from './entities/payment.entity';
 import Stripe from 'stripe';
+import { Booking } from 'src/booking/entities/booking.entity';
 
 @ApiBearerAuth()
 @ApiTags('payment')
@@ -18,7 +19,7 @@ export class PaymentController {
   @ApiResponse({ status: 201, description: 'The payment has been successfully created.', type: Payment })
   @ApiResponse({ status: 400, description: 'Invalid input, object invalid.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async create(@Body() createPaymentDto: CreatePaymentDto, bookingId: number) {
+  async create(@Body() createPaymentDto: CreatePaymentDto, @Query('bookingId') bookingId: number) {
     const { payment, sessionUrl } = await this.paymentService.create(createPaymentDto, bookingId);
     return { payment, sessionUrl };
     
@@ -60,6 +61,13 @@ export class PaymentController {
     return this.paymentService.findAll();
   }
 
+  @Get('/booking')
+  @ApiOperation({ summary: 'Get all payments by booking' })
+  @ApiResponse({ status: 200, description: 'Return all payments by booking.', type: [Payment] })
+  findByBookingId(@Query('bookingId') bookingId: number) {
+    return this.paymentService.findByBookingId(bookingId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get payment by id' })
   @ApiResponse({ status: 200, description: 'Return the payment by id.', type: Payment })
@@ -73,8 +81,9 @@ export class PaymentController {
     // return this.paymentService.update(+id, updatePaymentDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    // return this.paymentService.remove(+id);
+  @Delete('/delete')
+  async remove(@Query('paymentId') paymentId: number) {
+    return await this.paymentService.remove(paymentId);
+
   }
 }

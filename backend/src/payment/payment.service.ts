@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,7 +45,7 @@ export class PaymentService {
     });
     
     payment.price = createPaymentDto.price;
-    payment.status = 'pending';
+    payment.status = 'completed';
     payment.booking = booking;
     payment.stripeSessionId = session.id;
     
@@ -81,11 +81,53 @@ export class PaymentService {
     return result;
   }
 
+  async findByBookingId(bookingId: number): Promise<Payment[]> {
+    const booking = await this.bookingRepository.findOne({ where: { id: bookingId } });
+    if (!booking) {
+      throw new NotFoundException(`Booking with ID ${bookingId} not found`);
+    }
+
+    const payments = await this.paymentRepository.find({
+      where: { booking: { id: bookingId } },
+      relations: ['booking'],
+    });
+
+    return payments;
+  }
+
+  async remove(paymentId: number) {
+    const payment = await this.paymentRepository.findOne({ where: { id: paymentId }, relations: ['booking'] });
+  
+    if (!payment) {
+      throw new NotFoundException(`Payment with ID ${paymentId} not found`);
+    }
+  
+    const booking = payment.booking;
+  
+    const session = await this.stripe.checkout.sessions.retrieve(payment.stripeSessionId);
+    const paymentIntentId = session.payment_intent;
+  
+    if (payment.status === 'completed' && paymentIntentId) {
+      await this.stripe.refunds.create({
+        payment_intent: paymentIntentId as string,
+      });
+      payment.status = 'refunded';
+    } else {
+      await this.stripe.checkout.sessions.expire(payment.stripeSessionId);
+      payment.status = 'canceled';
+    }
+  
+    await this.paymentRepository.save(payment);
+  
+    if (booking) {
+      await this.bookingRepository.remove(booking);
+    }
+  
+    return { message: 'Payment canceled and booking deleted successfully' };
+  }
+
   update(id: number, updatePaymentDto: UpdatePaymentDto) {
     return `This action updates a #${id} payment`;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} payment`;
-  }
+  
 }
