@@ -16,7 +16,7 @@ export class CommentController {
   @ApiResponse({ status: 201, description: 'The comment has been successfully created.', type: Comment })
   @ApiResponse({ status: 400, description: 'Invalid input, object invalid.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  create(@Body() comment: Comment, @Request() req, propertyId: number) {
+  create(@Body() comment: Comment, @Request() req, @Query('property_id') propertyId: number) {
     const user_id = req.user;
     return this.commentService.create(comment, user_id, propertyId);
   }
@@ -24,14 +24,15 @@ export class CommentController {
   @Get()
   @ApiOperation({ summary: 'Get all property comments' })
   @ApiResponse({ status: 200, description: 'Return all property comments.', type: [Comment] })
-  findAll(propertyId: number) {
+  findAll(@Query('property_id') propertyId: number) {
     return this.commentService.findAllByProperty(propertyId);
   }
 
   @Get('/user_comment')
   @ApiOperation({ summary: 'Get all comments by user' })
-  @ApiResponse({ status: 200, description: 'Return all comments.', type: [Comment] })
-  findAllByUser(userId: number) {
+  @ApiResponse({ status: 200, description: 'Return all comments by the user.', type: [Comment] })
+  findAllByUser(@Request() req) {
+    const userId = req.user.id;
     return this.commentService.findAllByUser(userId);
   }
 
