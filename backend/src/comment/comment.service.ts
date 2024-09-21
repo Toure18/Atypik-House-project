@@ -31,11 +31,18 @@ export class CommentService {
     return this.commentRepository.save(comment);
   }
 
-  async findAll(): Promise<any> {
-
+  async findAllByProperty(propertyId): Promise<any> {
     const result = await this.commentRepository.find({
       relations: ['user', 'property'],
-      
+      where: [{property: {id: propertyId} }]
+  });
+    return result;
+  }
+
+  async findAllByUser(userId): Promise<any> {
+    const result = await this.commentRepository.find({
+      relations: ['user', 'property'],
+      where: [{user: {id: userId} }]
   });
     return result;
   }

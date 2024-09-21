@@ -45,7 +45,7 @@ export class PaymentService {
     });
     
     payment.price = createPaymentDto.price;
-    payment.status = 'completed';
+    payment.status = 'pending';
     payment.booking = booking;
     payment.stripeSessionId = session.id;
     
