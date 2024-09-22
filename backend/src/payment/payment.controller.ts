@@ -78,7 +78,7 @@ export class PaymentController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
-    // return this.paymentService.update(+id, updatePaymentDto);
+     return this.paymentService.update(+id, updatePaymentDto);
   }
 
   @Delete('/delete')
