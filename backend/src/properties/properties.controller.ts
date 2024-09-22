@@ -5,8 +5,8 @@ import { Property } from './entities/property.entity';
 import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Public } from '../auth/decorators/public.decorator';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
+
 
 @Controller('properties')
 export class PropertiesController {
@@ -18,20 +18,12 @@ export class PropertiesController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FilesInterceptor('images', 10, {
-      storage: diskStorage({
-        destination: './uploads/images',
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
+      storage: memoryStorage(), // Stockage en mémoire
     }),
   )
   async uploadFiles(@UploadedFiles() files: Express.Multer.File[], @Request() req) {
-    const imagePaths = files.map(file => file.filename);
+    const imagePaths = files.map(file => file.originalname); // Récupérer les noms des fichiers
+    // Traite les fichiers ici si nécessaire
     return {
       message: 'Images uploaded successfully.',
       imagePaths,
