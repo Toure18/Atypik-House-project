@@ -33,24 +33,37 @@ export class PropertiesService {
     return this.propertyRepository.save(property);
   }
 
-  async findAll(): Promise<any> {
-    const result = await this.propertyRepository.find({
-      relations: ['user']
-  });
-    return result;
-  }
-
-  async findAllByUser(userId): Promise<any> {
-
-    const result = await this.propertyRepository.find({
+  async findAll(page: number = 1, limit: number = 10): Promise<any> {
+    const [result, total] = await this.propertyRepository.findAndCount({
       relations: ['user'],
-      where: [{user: {id: userId} }]
-    }
-    
-    );
-    return result;
+      skip: (page - 1) * limit,  
+      take: limit,               
+    });
+
+    return {
+      data: result,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    };
   }
 
+ 
+  async findAllByUser(userId: number, page: number = 1, limit: number = 10): Promise<any> {
+    const [result, total] = await this.propertyRepository.findAndCount({
+      relations: ['user'],
+      where: { user: { id: userId } },
+      skip: (page - 1) * limit,  
+      take: limit,               
+    });
+
+    return {
+      data: result,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    };
+  }
   async findOne(id: number) : Promise<any>  {
     const result = await this.propertyRepository.find({
       relations: ['user'],
