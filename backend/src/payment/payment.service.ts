@@ -19,41 +19,44 @@ export class PaymentService {
     });
   }
   async create(createPaymentDto: CreatePaymentDto, bookingId: number) {
-    const payment = new Payment();
     const booking = await this.bookingRepository.findOne({ where: { id: bookingId } });
     if (!booking) {
-      throw new Error('Booking not found');
+        throw new Error('Booking not found');
     }
 
-    const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur', 
-            product_data: {
-              name: 'Booking Payment',
-            },
-            unit_amount: createPaymentDto.price * 100, 
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: `https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentSuccess?paymentId=${payment.id}`,
-      cancel_url: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentError',
-    });
-    
+    const payment = new Payment();
     payment.price = createPaymentDto.price;
     payment.status = 'pending';
     payment.booking = booking;
-    payment.stripeSessionId = session.id;
-    
+
+    // Sauvegardez le paiement d'abord pour obtenir l'ID
     const savedPayment = await this.paymentRepository.save(payment);
 
-    return { payment: savedPayment, sessionUrl: session.url };
+    const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+            {
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: 'Booking Payment',
+                    },
+                    unit_amount: createPaymentDto.price * 100,
+                },
+                quantity: 1,
+            },
+        ],
+        mode: 'payment',
+        success_url: `https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentSuccess?paymentId=${savedPayment.id}`,
+        cancel_url: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentError',
+    });
 
-  }
+    savedPayment.stripeSessionId = session.id;
+    await this.paymentRepository.save(savedPayment); // Mettez à jour l'objet avec le session ID
+
+    return { payment: savedPayment, sessionUrl: session.url };
+}
+
 
   async updatePaymentStatus(stripeSessionId: string, status: string) {
     const payment = await this.paymentRepository.findOne({ where: { stripeSessionId } });
