@@ -40,7 +40,7 @@ export class PaymentService {
         },
       ],
       mode: 'payment',
-      success_url: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentSuccess?paymentId=${payment.id}',
+      success_url: `https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentSuccess?paymentId=${payment.id}`,
       cancel_url: 'https://f2i-dsp4-g3-mt-mz-ai-f42d7.web.app/PaymentError',
     });
     
