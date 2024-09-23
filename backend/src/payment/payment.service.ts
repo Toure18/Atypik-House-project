@@ -129,8 +129,18 @@ export class PaymentService {
     return { message: 'Payment canceled and booking deleted successfully' };
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
-  }
+  async update(id: number, updatePaymentDto: UpdatePaymentDto) {
+    const payment = await this.paymentRepository.findOne({ where: { id } });
+    if (!payment) {
+        throw new NotFoundException(`Payment with ID ${id} not found`);
+    }
+    
+    payment.status = updatePaymentDto.status;
+  
+    await this.paymentRepository.save(payment);
+
+    return payment;
+}
+
   
 }
